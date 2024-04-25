@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+  <h2>Couvertures des axes</h2>
+  <div class="my-4"></div>
+  <ul>
+    {% for axe in axes %}
+      <li><a href="{% url 'proprietaires_par_axe' axe.id %}"> {{ axe.nom }}</a></li>
+    {% endfor %}
+  </ul>
+   <!-- Bouton pour ajouter un axe -->
+   <div class="text-center">
+    <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#ajouterAxeModal">
+      <i class="fas fa-plus"></i> 
+    </button>
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#supprimerAxeModal">
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+  <!-- Modal pour ajouter un axe -->
+  <div class="modal fade" id="ajouterAxeModal" tabindex="-1" role="dialog" aria-labelledby="ajouterAxeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ajouterAxeModalLabel">Ajouter un axe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="ajouterAxeForm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="nomAxe">Nom de l'axe</label>
+                        <input type="text" class="form-control" id="nomAxe" name="nomAxe" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  <i class="bi bi-x-lg"></i> <!-- Icône pour fermer -->
+              </button>
+              <button type="button" class="btn btn-info" id="ajouterAxeBtn">
+                  <i class="bi bi-plus-lg"></i> <!-- Icône pour ajouter -->
+              </button>
+          </div>
+        </div>
+    </div>
+</div>
+ <!-- Modal pour supprimer un axe -->
+<div class="modal fade" id="supprimerAxeModal" tabindex="-1" role="dialog" aria-labelledby="supprimerAxeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="supprimerAxeModalLabel">Supprimer un axe</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form id="supprimerAxeForm">
+                  {% csrf_token %}
+                  <div class="form-group">
+                      <label for="selectAxe">Sélectionner un axe à supprimer :</label>
+                      <select class="form-control" id="selectAxe" name="selectAxe" required>
+                          {% for axe in axes %}
+                          <option value="{{ axe.id }}">{{ axe.nom }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+              <button type="button" class="btn btn-danger" id="confirmerSuppressionBtn">Confirmer la suppression</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- script pour ajouter un axe -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('ajouterAxeBtn').addEventListener('click', {
+        handleEvent: function(event) {
+            var nomElement = document.getElementById('nomAxe');
+            if (nomElement) {
+                var nom = nomElement.value;
+
+                fetch('/axes/new/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        'nom': nom,
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                      $('#ajouterAxeModal').modal('hide'); // Fermer le modal après l'ajout
+                      $('body').removeClass('modal-open');
+                      $('.modal-backdrop').remove();
+                       window.location.reload();
+                    } else {
+                        alert('Une erreur s\'est produite lors de l\'ajout de l\'axe.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de l\'ajout de l\'axe :', error);
+                    alert('Une erreur s\'est produite lors de l\'ajout de l\'axe.');
+                });
+            } else {
+                console.error('L\'élément #nomAxe n\'a pas été trouvé dans le DOM.');
+            }
+        }
+    });
+});
+</script>
+ <!-- script pour supprimer un axe -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('confirmerSuppressionBtn').addEventListener('click', {
+        handleEvent: function(event) {
+            var axeId = document.getElementById('selectAxe').value;
+
+            fetch('/axes/${axeId}/delete/', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    $('#supprimerAxeModal').modal('hide'); 
+                    window.location.reload(); // Actualiser la page après la suppression
+                } else {
+                    alert('Une erreur s\'est produite lors de la suppression de l\'axe.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la suppression de l\'axe :', error);
+                alert('Une erreur s\'est produite lors de la suppression de l\'axe.');
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

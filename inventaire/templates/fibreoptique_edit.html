@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>{% if fibre.pk %}Modifier{% else %}Ajouter{% endif %} la Fibre Optique</h2>
+  <form method="post" action="{% if fibre.pk %}{% url 'fibreoptique_edit' fibre.pk %}{% else %}{% url 'fibreoptique_new' %}{% endif %}" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      {{ field.label_tag }}
+      {{ field }}
+    </div>
+  {% endfor %}
+    <!-- {{ form.as_p }} -->
+    <button type="submit">Enregistrer</button>
+  </form>
+  <a href="{% url 'fibreoptique_list' %}">Retour à la liste</a>
+{% endblock %}

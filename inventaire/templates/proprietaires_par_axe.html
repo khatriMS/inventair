@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Couvertures des opérateurs</h2>
+  <div class="my-4"></div>
+  <ul>
+    {% for proprietaire in proprietaires %}
+      <li>
+        <!--<a href="{% url 'detail_proprietaire' proprietaire.id %}">{{ proprietaire.nom }}</a>-->
+        <a href="{% url 'detail_proprietaire' proprietaire.id %}?axe_id={{ axe_id }}">{{ proprietaire.nom }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  <!-- Bouton pour ajouter et supprimer un operateur -->
+  <div class="text-center">
+    <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#ajouterProprietaireModal">
+      <i class="fas fa-plus"></i> 
+    </button>
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmationModal{{ proprietaire.id }}">
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+  <!-- Modal pour ajouter un operateur -->
+  <div class="modal fade" id="ajouterProprietaireModal" tabindex="-1" role="dialog" aria-labelledby="ajouterProprietaireModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ajouterProprietaireModalLabel">Ajouter un opérateur</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{% url 'proprietaires_par_axe' axe_id=axe_id %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="nom">Nom du propriétaire:</label>
+              <input type="text" class="form-control" id="nom" name="nom" required>
+            </div>
+            <div class="form-group">
+                <label for="axes">Choisir les axes:</label>
+                <select class="form-control" id="axes" name="axes" multiple required>
+                  {% for axe in axes %}
+                  {{axe.nom}}
+                    <option value="{{ axe.id }}">{{ axe.nom }}</option>
+                  {% endfor %}
+                </select>    
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="bi bi-x-lg"></i> <!-- Icône pour fermer -->
+        </button>
+        <button type="button" class="btn btn-info" id="ajouterProprietaireBtn">
+            <i class="bi bi-plus-lg"></i> <!-- Icône pour ajouter -->
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal pour supprimer un operateur -->
+  <div class="modal fade" id="confirmationModal{{ proprietaire.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Confirmer la suppression</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="supprimerProprietaireForm">
+            <div class="form-group">
+              <label for="selectProprietaire">Choisir le propriétaire à supprimer:</label>
+              <select class="form-control" id="selectProprietaire" name="selectProprietaire">
+                {% for proprietaire in proprietaires %}
+                  <option value="{{ proprietaire.id }}">{{ proprietaire.nom }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </form>
+          Êtes-vous sûr de vouloir supprimer ce propriétaire ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" id="confirmerSuppressionBtn">Confirmer la suppression</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- script pour ajouter un operateur -->
+<script>
+  var url = '{% url "proprietaires_par_axe" axe_id=axe_id %}';
+  document.getElementById('ajouterProprietaireBtn').addEventListener('click', function() {
+    var nom = document.getElementById('nom').value;
+    var axes = Array.from(document.getElementById('axes').selectedOptions).map(option => option.value);
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            'nom': nom,
+            'axes': axes
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+           // alert('Le propriétaire a été ajouté avec succès.');
+            $('#ajouterProprietaireModal').modal('hide'); // Fermer le modal après l'ajout
+            window.location.reload(); // Actualiser la page pour afficher les changements
+        } else {
+            alert('Une erreur s\'est produite lors de l\'ajout du propriétaire.');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur lors de l\'ajout du propriétaire :', error);
+        alert('Une erreur s\'est produite lors de l\'ajout du propriétaire.');
+    });
+  });
+</script>
+<!-- script pour supprimer un operateur -->
+<script>
+  document.getElementById('confirmerSuppressionBtn').addEventListener('click', function() {
+      var proprietaireId = document.getElementById('selectProprietaire').value;
+      fetch(`/proprietaires/${proprietaireId}/delete/`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'
+          }
+      })
+      .then(response => {
+          if (response.ok) {
+              $('#confirmationModal{{ proprietaire.id }}').modal('hide'); 
+              // alert('Le propriétaire a été supprimé avec succès.');
+              window.location.reload(); // Actualiser la page pour afficher les changements
+          } else {
+              alert('Une erreur s\'est produite lors de la suppression du propriétaire.');
+          }
+      })
+      .catch(error => {
+          console.error('Erreur lors de la suppression du propriétaire :', error);
+          alert('Une erreur s\'est produite lors de la suppression du propriétaire.');
+      });
+  });
+</script>
+{% endblock %}

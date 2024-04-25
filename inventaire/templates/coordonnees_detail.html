@@ -1,0 +1,62 @@
+<!-- templates/inventaire_fo/coordonnees_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Détails des coordonnées</h2>
+  <div class="container">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><strong>Latitude :</strong></td>
+          <td>{{ coordonnee.latitude }}</td>
+          <td><strong>Longitude :</strong></td>
+          <td>{{ coordonnee.longitude }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Ajoutez d'autres informations si nécessaire -lib/python3.x/site-packages/django->
+  <button type="button" class="btn btn-primaryM" data-toggle="modal" data-target="#exampleModal">
+    Modifier
+  </button>
+  <a href="{% url 'coordonnees_confirm_delete' coordonnee.pk %}">Supprimer</a>
+  <a href="{% url 'coordonnees_list' %}">Retour à la liste des coordonnées</a>
+
+  <!- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modifier des coordonnées</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Contenu du formulaire de modification sera chargé ici -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="saveChanges">Enregistrer</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- JavaScript pour charger le contenu du formulaire dans le modal -->
+<script>
+  $(document).ready(function() {
+    $('#exampleModal').on('show.bs.modal', function(e) {
+      var url = "{% url 'coordonnees_edit' coordonnee.pk %}"; // Assurez-vous que cette URL est correcte
+      $('#modalBody').load(url + ' form');
+    });
+    $('#saveChanges').click(function() {
+        // Soumettre le formulaire lors du clic sur le bouton "Enregistrer"
+        $('#modalBody form').submit();
+        // Fermer le modal après l'enregistrement
+        $('#exampleModal').modal('hide');
+      });
+  });
+</script>
+{% endblock %}

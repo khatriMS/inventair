@@ -1,0 +1,13 @@
+<!-- templates/inventaire_fo/equipementactif_edit.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>{% if equipement %}Modifier{% else %}Ajouter{% endif %} un équipement actif</h2>
+  <form method="post" action="{% if equipement %}{% url 'equipementactif_edit' equipement.pk %}{% else %}{% url 'equipementactif_new' %}{% endif %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer</button>
+  </form>
+  <a href="{% url 'equipementactif_list' %}">Retour à la liste des équipements actifs</a>
+{% endblock %}

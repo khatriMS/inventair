@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Liste des fibres</h2>
+  <ul>
+    {% for fibre in fibres %}
+      <li> {{ fibre.coord_extremite_1 }}</li>
+      <li> {{ fibre.coord_extremite_2 }}</li>
+      <li> {{ fibre.type }}</li>
+      <li> {{ fibre.nombre_de_brin }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

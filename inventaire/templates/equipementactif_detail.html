@@ -1,0 +1,12 @@
+<!-- templates/inventaire_fo/equipementactif_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Détails de l'équipement actif</h2>
+  <p>Nom: {{ equipement.nom }}</p>
+  <!-- Ajoutez d'autres informations si nécessaire -->
+  <a href="{% url 'equipementactif_edit' equipement.pk %}">Modifier</a>
+  <a href="{% url 'equipementactif_delete' equipement.pk %}">Supprimer</a>
+  <a href="{% url 'equipementactif_list' %}">Retour à la liste des équipements actifs</a>
+{% endblock %}

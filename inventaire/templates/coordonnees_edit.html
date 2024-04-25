@@ -1,0 +1,19 @@
+<!-- templates/inventaire_fo/coordonnees_edit.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>{% if coordonnee %}Modifier{% else %}Ajouter{% endif %} des coordonnées</h2>
+  <form method="post" action="{% if coordonnee %}{% url 'coordonnees_edit' coordonnee.pk %}{% else %}{% url 'coordonnees_new' %}{% endif %}">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      {{ field.label_tag }}
+      {{ field }}
+    </div>
+  {% endfor %}
+    <!-- ]{{ form.as_p }} -->
+     <button type="submit">Enregistrertt</button> 
+  </form>
+  <a href="{% url 'coordonnees_list' %}">Retour à la liste des coordonnées</a>
+{% endblock %}

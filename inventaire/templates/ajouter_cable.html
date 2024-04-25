@@ -1,0 +1,11 @@
+<!-- templates/inventaire_fo/ajouter_cable.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <h2>Ajouter un câble</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer</button>
+  </form>
+{% endblock %}

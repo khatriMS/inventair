@@ -1,0 +1,13 @@
+<!-- templates/inventaire_fo/equipementactif_confirm_delete.html -->
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Confirmer la suppression de l'équipement actif</h2>
+  <p>Êtes-vous sûr de vouloir supprimer cet équipement actif ?</p>
+  <form method="post" action="{% url 'equipementactif_delete' equipement.pk %}">
+    {% csrf_token %}
+    <button type="submit">Supprimer</button>
+  </form>
+  <a href="{% url 'equipementactif_list' %}">Annuler</a>
+{% endblock %}

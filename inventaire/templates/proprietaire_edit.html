@@ -1,0 +1,13 @@
+<!-- templates/inventaire_fo/proprietaire_edit.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>{% if proprietaire %}Modifier{% else %}Ajouter{% endif %} un propriétaire</h2>
+  <form method="post" action="{% if proprietaire %}{% url 'proprietaire_edit' proprietaire.pk %}{% else %}{% url 'proprietaire_new' %}{% endif %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <!-- <button type="submit">Enregistrer</button> -->
+  </form>
+  <a href="{% url 'proprietaire_list' %}">Retour à la liste des propriétaires</a>
+{% endblock %}

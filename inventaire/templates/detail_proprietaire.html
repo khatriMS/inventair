@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Couverture de {{ proprietaire.nom }}</h1>
+    <div class="table-container">
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Propriétaire</th>
+                    <th>Nom du site (Extrémité A)</th>
+                    <th>Longitude/X (Extrémité A)</th>
+                    <th>Latitude/Y (Extrémité A)</th>
+                    <th>Equipement actif (brève description) (Extrémité A)</th>
+                    <th>Nom du site (Extrémité B)</th>
+                    <th>Longitude/X (Extrémité B)</th>
+                    <th>Latitude/Y (Extrémité B)</th>
+                    <th>Equipement actif (brève description) (Extrémité B)</th>
+                    <th>Type</th>
+                    <th>Nombre de brins</th>
+                    <th>Mode d'installation</th>
+                    <th>Nombre de longueur d’onde exploitable</th>
+                    <th>Nombre de longueur d’onde supporté</th>
+                    <th>Nombre d’interface client disponible</th>
+                    <th>Nombre d’interface client exploitable</th>
+
+                    <th>map</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fibre in fibres %}
+                    {% if fibre.coord_extremite_1.axes.id == axe_id and fibre.coord_extremite_1.proprietaire == proprietaire %}
+                        <tr>
+                            <td>{{ proprietaire.nom }}</td>
+                            <td>{{ fibre.coord_extremite_1.nom_site }}</td>
+                            <td>{{ fibre.coord_extremite_1.longitude }}</td>
+                            <td>{{ fibre.coord_extremite_1.latitude }}</td>
+                            <td>
+                                {% for equipement in fibre.coord_extremite_1.equipement.all %}
+                                    {{ equipement.nom }} ({{ equipement.constructeur }}), Technologie : 
+                                    {% for technology in equipement.technologies.all %}
+                                        {{ technology.nom }}
+                                    {% endfor %}
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{ fibre.coord_extremite_2.nom_site }}</td>
+                            <td>{{ fibre.coord_extremite_2.longitude }}</td>
+                            <td>{{ fibre.coord_extremite_2.latitude }}</td>
+                            <td>
+                                {% for equipement in fibre.coord_extremite_2.equipement.all %}
+                                    {{ equipement.nom }}, Constructeur : ({{ equipement.constructeur }}), Technologie : 
+                                    {% for technology in equipement.technologies.all %}
+                                        {{ technology.nom }}
+                                    {% endfor %}
+                                    , Services supportés:
+                                    {% for service in equipement.services_supportes.all %}
+                                        {{ service.nom }}
+                                    {% endfor %}
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{ fibre.type }}</td>
+                            <td>{{ fibre.nombre_de_brin }}</td>
+                            <td>{{ fibre.mode_installation }}</td>
+                            <td>{{ fibre.longueur_exploitable }}</td>
+                            <td>{{ fibre.longueur_supportee }}</td>
+                            <td>{{ fibre.interfaces_client_dispo }}</td>
+                            <td>{{ fibre.interfaces_client_exploitable }}</td>
+                        
+                            <td><a href="{% url 'map' %}">open map</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="my-4"></div>
+    <style>
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #006d5b;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f8f5;
+        }
+
+        tr:hover {
+            background-color: #e0f2f1;
+        }
+    </style>
+
+    <!-- Bouton pour ajouter, supprimer et imprimer une couverture d'un proprietaire -->
+    <div class="text-center">
+        <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#ajouterFibreOptiqueModal">
+        <i class="fas fa-plus"></i> 
+        </button>
+        <!-- <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="##confirmationModal{{ fibre.id }}">
+        <i class="bi bi-trash"></i>
+        </button> -->
+        <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#deleteModal">
+            <i class="bi bi-trash"></i>
+        </button>
+        <button type="button" class="btn btn-info mr-2" onclick="printTable()">
+        <i class="bi bi-printer"></i>
+        </button>
+    </div>
+    <!-- modale pour ajouter une fibre optique -->
+    <div class="modal fade" id="ajouterFibreOptiqueModal" tabindex="-1" role="dialog" aria-labelledby="ajouterFibreOptiqueModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajouterFibreOptiqueModalLabel">Ajouter Fibre Optique</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="ajouterFibreOptiqueForm" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="coord_extremite_1">Coordonnées de l'extrémité 1 :</label>
+                            <select class="form-control" id="coord_extremite_1" name="coord_extremite_1">
+                                {% for coordonnee in coordonnees %}
+                                    <option value="{{ coordonnee.id }}">{{ coordonnee.nom_site }} - {{ coordonnee.proprietaire }} - {{ coordonnee.axes}}</option>
+                                {% endfor %}
+                            </select>
+                            <a class="related-widget-wrapper-link change-related" id="change_id_coord_extremite_1"href="/admin/inventaire/coordonnees/change/?_to_field=id&amp;_popup=1"data-popup="yes"title="Change selected coordonnees"><img src="/inventaire/static/admin/img/icon-changelink.svg" alt="" width="20" height="20"></a>
+                            <a class="related-widget-wrapper-link add-related" id="add_id_coord_extremite_1" data-popup="yes"href="/admin/inventaire/coordonnees/add/?_to_field=id&amp;_popup=1"title="Add another coordonnees"><img src="/inventaire/static/admin/img/icon-addlink.svg" alt="" width="20" height="20"></a>
+                            <a class="related-widget-wrapper-link view-related" id="view_id_coord_extremite_1"href="/admin/inventaire/coordonnees/view/?_to_field=id"title="View selected coordonnees"><img src="/inventaire/static/admin/img/icon-viewlink.svg" alt="" width="20" height="20"></a>
+                         
+                        </div>
+                        <div class="form-group"> 
+                            <label for="coord_extremite_2">Coordonnées de l'extrémité 2 :</label>
+                            <select class="form-control" id="coord_extremite_2" name="coord_extremite_2">
+                                {% for coordonnee in coordonnees %}
+                                    <option value="{{ coordonnee.id }}">{{ coordonnee.nom_site }} - {{ coordonnee.proprietaire }} - {{ coordonnee.axes}}</option>
+                                {% endfor %}
+                            </select>
+                            <a class="related-widget-wrapper-link change-related" id="modalBody" data-popup="yes" href="{% url 'coordonnees_list' %}"title="Change selected coordonnees"><img src="/inventaire/static/admin/img/icon-changelink.svg" alt="" width="20" height="20"></a>                            
+                            <a class="related-widget-wrapper-link add-related" id="exampleModalLabel"data-popup="yes"href="{% url 'coordonnees_new' %}"title="Add another coordonnees"><img src="/inventaire/static/admin/img/icon-addlink.svg" alt="" width="20" height="20"></a>
+                            <a class="related-widget-wrapper-link view-related" id="view_id_coord_extremite_2"data-popup="yes"href="/admin/inventaire/coordonnees/view/?_to_field=id&amp;_popup=1"title="View selected coordonnees"><img src="/inventaire/static/admin/img/icon-viewlink.svg" alt="" width="20" height="20"></a>
+
+                        <div class="form-group">
+                            <label for="type">Type :</label>
+                            <input type="text" class="form-control" id="type" name="type" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre_de_brin">Nombre de brins :</label>
+                            <input type="number" class="form-control" id="nombre_de_brin" name="nombre_de_brin" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mode_installation">Mode d'installation :</label>
+                            <input type="text" class="form-control" id="mode_installation" name="mode_installation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="longueur_exploitable">Longueur exploitable :</label>
+                            <input type="number" class="form-control" id="longueur_exploitable" name="longueur_exploitable" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="longueur_supportee">Longueur supportée :</label>
+                            <input type="number" class="form-control" id="longueur_supportee" name="longueur_supportee" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="interfaces_client_dispo">Interfaces client disponibles :</label>
+                            <input type="number" class="form-control" id="interfaces_client_dispo" name="interfaces_client_dispo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="interfaces_client_exploitable">Interfaces client exploitables :</label>
+                            <input type="number" class="form-control" id="interfaces_client_exploitable" name="interfaces_client_exploitable" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trajet">Trajet (fichier json) :</label>
+                            <input type="file" class="form-control" id="trajet" name="trajet">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal pour supprimer une fibre optique -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">Supprimer une fibre</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Êtes-vous sûr de vouloir supprimer cette fibre ?</p>
+              <form id="deleteForm" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="fibreSelect">Choisir une fibre :</label>
+                  <select class="form-control" id="fibreSelect" name="fibreId">
+                    {% for fibre in fibres %}
+                        <option value="{{ fibre.id }}">{{ fibre.id }} - {{ fibre.coord_extremite_1.nom_site }} - {{ fibre.coord_extremite_2.nom_site }} - {{ fibre.type }} - {{ fibre.nombre_de_brin }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+              <button type="button" class="btn btn-danger" onclick="deleteFibre()">Supprimer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <script>
+        // Script pour gérer l'envoi du formulaire en AJAX
+        $(document).ready(function() {
+            $('#ajouterFibreOptiqueForm').submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "ajouter_fibre_optique" %}',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Code à exécuter en cas de succès
+                        // Par exemple, fermer le modal et rafraîchir la page
+                        $('#ajouterFibreOptiqueModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        // Code à exécuter en cas d'erreur
+                        // Par exemple, afficher un message d'erreur
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <!-- Script pour supprimer -->
+    <script>
+        function deleteFibre() {
+        var fibreId = document.getElementById("fibreSelect").value;
+        if (fibreId) {
+            fetch('/supprimer_fibre_optique/' + fibreId + '/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (response.ok) {
+                    $('#deleteModal').modal('hide'); // Fermer le modal après la suppression
+                    window.location.reload(); // Actualiser la page pour afficher les changements
+                } else {
+                    alert('Une erreur s\'est produite lors de la suppression de la fibre.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la suppression de la fibre :', error);
+                alert('Une erreur s\'est produite lors de la suppression de la fibre.');
+            });
+        }
+    }
+    </script>
+
+     <!-- Script JavaScript pour l'impression -->
+     <script>
+        function printTable() {
+            var table = document.getElementById("data-table");
+            var data = [];
+    
+            // Récupérer les données de chaque ligne du tableau
+            for (var i = 0; i < table.rows.length; i++) {
+                var rowData = [];
+                for (var j = 0; j < table.rows[i].cells.length; j++) {
+                    rowData.push(table.rows[i].cells[j].innerText);
+                }
+                data.push(rowData);
+            }
+    
+            // Créer une vue d'impression
+            var printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Impression</title>');
+            // Style CSS pour ajuster la largeur du tableau à la page
+            printWindow.document.write('<style>@media print { table { width: 100%; } }</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write('<div style="text-align: center;"><img src="/inventaire/static/header.jpg" style="max-width: 100%; height: auto;"></div>');
+            printWindow.document.write('<h1>Couverture de {{ proprietaire.nom }}</h1>');
+            printWindow.document.write('<table border="1">');
+            
+            // Ajouter les données au tableau dans la vue d'impression
+            for (var i = 0; i < data.length; i++) {
+                printWindow.document.write('<tr>');
+                for (var j = 0; j < data[i].length; j++) {
+                    printWindow.document.write('<td>' + data[i][j] + '</td>');
+                }
+                printWindow.document.write('</tr>');
+            }
+            
+            printWindow.document.write('</table></body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+    
+{% endblock %}

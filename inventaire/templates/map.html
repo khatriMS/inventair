@@ -1,0 +1,54 @@
+{% load static %}
+{% block content %}
+<!doctype html>
+<html>
+  <head>
+    <title>map</title>
+    <link rel="stylesheet" type="text/css" href="{% static "" %}" />
+
+  </head>
+  <style>
+    #map {
+        height: 100%;
+      }
+      
+      /* 
+       * Optional: Makes the sample page fill the window. 
+       */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  <body>
+    <div id="map"></div>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    {% comment %} <script type="module" src="{% static "js/index.js" %}"></script> {% endcomment %}
+    <script>let map;
+
+          function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+              zoom: 5.9,
+              center: { lat: 21, lng: -8},
+            });
+            {% for fibre in fibres %}
+                {% comment %} {% if fibre.coord_extremite_1.axes.id == axe_id and fibre.coord_extremite_1.proprietaire == proprietaire %} {% endcomment %}
+                     map.data.loadGeoJson(
+                       "{{fibre.trejet}}"
+                       );
+                     {% comment %} {% endif %} {% endcomment %}
+            {% endfor %}
+          }
+          
+          window.initMap = initMap;</script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzewP7_2ZoOx7OaMeg5U9RcGI3LNUBB8c&callback=initMap&v=weekly"
+      defer
+    ></script>
+  </body>
+</html>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Liste des opérateurs</h2>
+  <div class="my-4"></div>
+  <div class="container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <!-- <th scope="col"></th> -->
+          <th scope="col">Les noms des opérateurs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for proprietaire in proprietaires %}
+          <tr>
+            <!-- <th scope="row">{{ forloop.counter }}</th> -->
+            <td><a href="{% url 'proprietaire_detail' proprietaire.pk %}">{{ proprietaire.nom }}</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bouton pour ajouter un propriétaire -->
+  <div class="text-center">
+    <button type="button" class="btn btn-primaryM" data-toggle="modal" data-target="#exampleModal">
+      Ajouter un opérateur
+    </button>
+  </div>
+  </div>
+  <!-- Modal pour ajouter un propriétaire -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ajouter un propriétaire</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Le contenu du formulaire pour ajouter un propriétaire sera chargé ici -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primaryM" id="submitForm">Enregistrer</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- Script pour charger le formulaire pour ajouter un propriétaire dans le modal -->
+  <script>
+    $(document).ready(function() {
+      $('#exampleModal').on('show.bs.modal', function(e) {
+        var url = "{% url 'proprietaire_new' %}";
+        $('#modalBody').load(url + ' form');
+      });
+
+      // Attacher un événement pour soumettre le formulaire lorsque le bouton est cliqué
+      $('#exampleModal').on('click', '#submitForm', function(e) {
+        $('#modalBody form').submit();
+      });
+    });
+  </script>
+  <style>
+    .btn-primaryM{
+  color: #0fa774;
+}
+  </style>
+{% endblock %}

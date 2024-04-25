@@ -1,0 +1,80 @@
+<!-- templates/inventaire_fo/coordonnees_list.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Liste des coordonnées des sites</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <!-- <th scope="col">ID</th> -->
+          <th scope="col">Nom du site</th>
+          <th scope="col">Latitude</th>
+          <th scope="col">longitude</th>
+          <th scope="col">Opérateur</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for coordonnee in coordonnees %}
+          <tr>
+            <!-- <th scope="row">{{ coordonnee.pk }}</th> -->
+            <td>
+              <a href="{% url 'coordonnees_detail' coordonnee.pk %}">
+                {{ coordonnee.nom_site }}</a></td>
+            <td>{{ coordonnee.latitude }}</td>
+            <td>{{ coordonnee.longitude }}</td>
+            <td>{{ coordonnee.proprietaire.nom }}</td>
+
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="text-center">
+    <button type="button" class="btn btn-primaryM" data-toggle="modal" data-target="#exampleModal">
+      Ajouter des coordonnées
+    </button>
+    <!--a href="{% url 'coordonnees_new' %}" class="btn btn-primaryM">Ajouter des coordonnées</a--> 
+  </div>
+   <!-- Modal -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ajouter des coordonnées</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Contenu du formulaire d'ajout de coordonnées sera chargé ici -->
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primaryM" id="submitForm">Enregistrer</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- JavaScript pour charger le contenu du formulaire dans le modal -->
+<script>
+  $(document).ready(function() {
+    $('#exampleModal').on('show.bs.modal', function(e) {
+      var url = "{% url 'coordonnees_new' %}"; // Assurez-vous que cette URL est correcte
+      $('#modalBody').load(url + ' form');
+    });
+    $('#exampleModal').on('click', '#submitForm', function(e) {
+        $('#modalBody form').submit();
+      });
+  });
+</script>
+  <style>
+    .btn-primaryM{
+  color: #0fa774;
+}
+</style>
+{% endblock %}
+

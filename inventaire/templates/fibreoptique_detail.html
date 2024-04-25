@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Détails de la Fibre Optique</h2>
+  <p>Type: {{ fibre.type }}</p>
+  <p>Latence: {{ fibre.latence }}</p>
+  <p>Bande Passante: {{ fibre.bande_passante }}</p>
+  <!-- Ajoutez d'autres champs ici -->
+  <a href="{% url 'fibreoptique_edit' pk=fibre.pk %}">Modifier</a>
+  <a href="{% url 'fibreoptique_list' %}">Retour à la liste</a>
+{% endblock %}

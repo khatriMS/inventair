@@ -1,0 +1,13 @@
+<!-- templates/inventaire_fo/coordonnees_confirm_delete.html -->
+{% extends 'base_generic.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Confirmer la suppression des coordonnées</h2>
+  <p>Êtes-vous sûr de vouloir supprimer ces coordonnées ?</p>
+  <form method="post" action="{% url 'coordonnees_confirm_delete' coordonnee.pk %}">
+    {% csrf_token %}
+    <button type="submit">Supprimer</button>
+  </form>
+  <a href="{% url 'coordonnees_list' %}">Annuler</a>
+{% endblock %}

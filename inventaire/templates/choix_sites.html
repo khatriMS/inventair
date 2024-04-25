@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choix de l'option</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f8f5; /* Vert menthe plus clair */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #006d5b; /* Vert menthe plus foncé */
+            margin-bottom: 20px;
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            display: block;
+            padding: 15px;
+            background-color: #009688; /* Vert menthe */
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #00796b; /* Vert menthe plus foncé au survol */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Inventaire :</h1>
+        <ul>
+            <li><a href="{% url 'liste_axes' %}">Fibre inter-urbaine</a></li>
+            <li><a href="#">Fibre urbaine</a></li>
+            <li><a href="#">Site GSM</a></li>
+            <li><a href="#">Lien micro-ondes</a></li>
+        </ul>
+    </div>
+</body>
+
+</html>

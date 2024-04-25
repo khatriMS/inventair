@@ -1,0 +1,31 @@
+<!-- templates/inventaire_fo/equipementactif_list.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Liste des équipements actifs</h2>
+  <div class="my-4"></div>
+  <div class="container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <!-- <th scope="col"></th> -->
+          <th scope="col">Les noms des équipements actifs</th>
+          <th>Proprietaire</th>
+          <th>Nom de site</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for equipement in equipements %}
+          <tr>
+            <!-- <th scope="row">{{ forloop.counter }}</th> -->
+            <td><a href="{% url 'equipementactif_detail' equipement.pk %}">{{equipement.nom}}</a></td>
+            <td>{{equipement.proprietaire.nom}}</td>
+            <td>{{equipement.coord_extremite.nom_site}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <a href="{% url 'equipementactif_new' %}">Ajouter un équipement actif</a>
+{% endblock %}

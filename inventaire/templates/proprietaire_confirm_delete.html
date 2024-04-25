@@ -1,0 +1,13 @@
+<!-- templates/inventaire_fo/proprietaire_confirm_delete.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Confirmer la suppression du propriétaire</h2>
+  <p>Êtes-vous sûr de vouloir supprimer le propriétaire "{{ proprietaire.nom }}" ?</p>
+  <form method="post" action="{% url 'proprietaire_delete' proprietaire.pk %}">
+    {% csrf_token %}
+    <button type="submit">Supprimer</button>
+  </form>
+  <a href="{% url 'proprietaire_list' %}">Annuler</a>
+{% endblock %}
