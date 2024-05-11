@@ -67,7 +67,7 @@
                             <td>{{ fibre.interfaces_client_dispo }}</td>
                             <td>{{ fibre.interfaces_client_exploitable }}</td>
                         
-                            <td><a href="{% url 'map' %}">open map</a></td>
+                            <td><a href="{% url 'map' pk=fibre.pk %}">open map</a></td>
                         </tr>
                     {% endif %}
                 {% endfor %}

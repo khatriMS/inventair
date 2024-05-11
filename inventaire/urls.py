@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns=[
     path('mapTest/',views.mapTest,name='maptest'),
-    path('map',views.map,name='map'),
+    path('map//<int:pk>/',views.map,name='map'),
     path('',views.home,name="home"),
     path('axes/', views.liste_axes, name='liste_axes'),
     path('axes/new/', views.axe_new, name='axes_new'),

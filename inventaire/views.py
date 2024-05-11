@@ -9,12 +9,13 @@ from .forms import AxesForm, ProprietaireForm, CoordonneesForm, EquipementActifF
 #nouvelle version
 # views.py
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
-def map(request):
-    fibres = FibreOptique1.objects.all()
+def map(request, pk):
     
-    return render(request, 'map.html',{'fibres': fibres} )
+    fibres = get_object_or_404( FibreOptique1, pk=pk)
+    
+    return render(request, 'map.html',{'fibres': [fibres]} )
 
 def mapTest(request):
     fibres = FibreOptique1.objects.all()
