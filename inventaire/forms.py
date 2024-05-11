@@ -22,23 +22,6 @@ class EquipementActifForm(forms.ModelForm):
         model = EquipementActif
         fields = ['proprietaire', 'coord_extremite', 'nom']  # Ajoutez d'autres champs si nécessaire
 
-"""class FibreOptiqueForm(forms.ModelForm):
-    class Meta:
-        model = FibreOptique
-        fields = ['proprietaire', 'coord_extremite_1', 'coord_extremite_2', 'equipement_actif',
-                  'type', 'latence', 'bande_passante', 'nombre_de_brin', 'mode_installation',
-                  'longueur_exploitable', 'longueur_supportee', 'interfaces_client_dispo',
-                  'interfaces_client_exploitable']  
-
-# Ajoutez d'autres champs si nécessaire
-def __init__(self, *args, **kwargs):
-        super(FibreOptiqueForm, self).__init__(*args, **kwargs)
-        # Ajoutez des étiquettes personnalisées pour les champs
-        self.fields['proprietaire'].label_from_instance = lambda obj: obj.nom
-        self.fields['coord_extremite_1'].label_from_instance = lambda obj: obj.nom_site
-        self.fields['coord_extremite_2'].label_from_instance = lambda obj: obj.nom_site
-"""
-
 # Modifiez votre formulaire FibreOptiqueForm(forms.py)
 class FibreOptiqueForm(forms.ModelForm):
     class Meta:

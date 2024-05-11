@@ -7,9 +7,19 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Proprietaire, Coordonnees,EquipementActif1, ServiceSupporte, Axe,FibreOptique1,Technologie
 from .forms import AxesForm, ProprietaireForm, CoordonneesForm, EquipementActifForm, FibreOptiqueForm
 #nouvelle version
+# views.py
+
+from django.shortcuts import render
+
 def map(request):
     fibres = FibreOptique1.objects.all()
-    return render(request,'map.html' ,{'fibres': fibres})
+    
+    return render(request, 'map.html',{'fibres': fibres} )
+
+def mapTest(request):
+    fibres = FibreOptique1.objects.all()
+    return render(request, 'mapTest.html',{'fibres': fibres} )
+
 def liste_axes(request):
     axes = Axe.objects.all()
     # print(axes)

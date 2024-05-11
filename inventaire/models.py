@@ -114,22 +114,6 @@ class EquipementActif(models.Model):
         return self.nom
     # Ajoutez d'autres champs pour les informations de l'équipement actif
 
-"""class FibreOptique(models.Model):
-    proprietaire = models.ForeignKey(Proprietaire, on_delete=models.CASCADE)
-    coord_extremite_1 = models.OneToOneField(Coordonnees, related_name='extremite_1', on_delete=models.CASCADE)
-    coord_extremite_2 = models.OneToOneField(Coordonnees, related_name='extremite_2', on_delete=models.CASCADE)
-    equipement_actif = models.OneToOneField(EquipementActif, on_delete=models.CASCADE)
-    type = models.CharField(max_length=255)
-    latence = models.FloatField()
-    bande_passante = models.FloatField()
-    nombre_de_brin = models.IntegerField()
-    mode_installation = models.CharField(max_length=255)
-    longueur_exploitable = models.FloatField()
-    longueur_supportee = models.FloatField()
-    interfaces_client_dispo = models.IntegerField()
-    interfaces_client_exploitable = models.IntegerField()
-    # Ajoutez d'autres champs pour les informations de la fibre optique
-"""
 
 # Modifiez votre modèle FibreOptique(models.py)
 class FibreOptique(models.Model):
