@@ -45,9 +45,9 @@ def map(request, pk):
     
     return render(request, 'map.html',{'fibres': [fibres]} )
 
-def mapTest(request):
-    fibres = FibreOptique1.objects.all()
-    return render(request, 'mapTest.html',{'fibres': fibres} )
+# def mapTest(request):
+#     fibres = FibreOptique1.objects.all()
+#     return render(request, 'mapTest.html',{'fibres': fibres} )
 
 def liste_axes(request):
     axes = Axe.objects.all()

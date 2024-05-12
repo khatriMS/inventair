@@ -21,9 +21,9 @@
                     <th>Nombre de longueur d’onde exploitable</th>
                     <th>Nombre de longueur d’onde supporté</th>
                     <th>Nombre d’interface client disponible</th>
-                    <th>Nombre d’interface client exploitable</th>
-
+                    <th>Nombre d’interface client exploitable</th>   
                     <th>map</th>
+                    {% comment %} <th>téléchargement</th> {% endcomment %}
                 </tr>
             </thead>
             <tbody>
@@ -66,8 +66,8 @@
                             <td>{{ fibre.longueur_supportee }}</td>
                             <td>{{ fibre.interfaces_client_dispo }}</td>
                             <td>{{ fibre.interfaces_client_exploitable }}</td>
-                        
                             <td><a href="{% url 'map' pk=fibre.pk %}">open map</a></td>
+                            {% comment %} <td>{{fibre.trajet.url}}</td> {% endcomment %}
                         </tr>
                     {% endif %}
                 {% endfor %}
