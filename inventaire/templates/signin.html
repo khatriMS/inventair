@@ -1,1 +1,94 @@
-<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8">  <meta http-equiv="X-UA-Compatible" content="IE=edge">  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Elegant Dashboard | Sign In</title>  <!-- Favicon -->  <link rel="shortcut icon" href="./img/svg/logo.svg" type="image/x-icon">  <!-- Custom styles -->  <link rel="stylesheet" href="./css/style.min.css"></head><body>  <div class="layer"></div><main class="page-center">  <article class="sign-up">    <h1 class="sign-up__title">Welcome back!</h1>    <p class="sign-up__subtitle">Sign in to your account to continue</p>    <form class="sign-up-form form" action="" method="">      <label class="form-label-wrapper">        <p class="form-label">Email</p>        <input class="form-input" type="email" placeholder="Enter your email" required>      </label>      <label class="form-label-wrapper">        <p class="form-label">Password</p>        <input class="form-input" type="password" placeholder="Enter your password" required>      </label>      <a class="link-info forget-link" href="##">Forgot your password?</a>      <label class="form-checkbox-wrapper">        <input class="form-checkbox" type="checkbox" required>        <span class="form-checkbox-label">Remember me next time</span>      </label>      <button class="form-btn primary-default-btn transparent-btn">Sign in</button>    </form>  </article></main><!-- Chart library --><script src="./plugins/chart.min.js"></script><!-- Icons library --><script src="plugins/feather.min.js"></script><!-- Custom scripts --><script src="js/script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elegant Dashboard | Sign In</title>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="./img/svg/logo.svg" type="image/x-icon">
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="./css/style.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+  }
+
+  .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 300px;
+      max-width: 80%;
+      text-align: center;
+  }
+
+  h2 {
+      margin-bottom: 20px;
+      color: #333;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+  }
+
+  input[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  }
+
+  input[type="submit"]:hover {
+      background-color: #0056b3;
+  }
+
+  .error-message {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+  }
+</style>
+</head>
+
+<body>
+  <!-- signin.html -->
+  <div class="container">
+    <h2>Login</h2>
+    {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" name="nom" placeholder="Username" required>
+      <br>
+      <input type="password" name="password" placeholder="Password" required>
+      <br>
+      <button class="btn btn-primary" type="submit">Login</button>
+      
+      
+    </form>
+    
+  </div>
+  
+</body>
+
+</html>

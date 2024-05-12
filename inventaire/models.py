@@ -17,8 +17,13 @@ class Axe(models.Model):
 
 class Proprietaire(models.Model):
     nom = models.CharField(max_length=255)
+    password = models.CharField(max_length=128 , default='password123')
     axes = models.ManyToManyField(Axe, default=[1])  # Remplacez [1] par une liste des IDs des axes par défaut
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
 
+    def check_password(self, raw_password):
+        return raw_password == self.password 
     def __str__(self):
         return self.nom
     
