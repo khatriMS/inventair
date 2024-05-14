@@ -1,11 +1,16 @@
 # inventaire_fo/forms.py
 from django import forms
-from .models import Proprietaire, Coordonnees, EquipementActif, FibreOptique, Axe
+from .models import Proprietaire, Coordonnees, EquipementActif, FibreOptique, Axe 
 
+# class roleForm(forms.ModelForm):
+#     class Meta:
+#         model = role
+#         fields = ['nom']
+    
 class ProprietaireForm(forms.ModelForm):
     class Meta:
         model = Proprietaire
-        fields = ['nom', 'password' , 'axes']  # Ajoutez d'autres champs si nécessaire
+        fields = ['nom' ,'axes']  # Ajoutez d'autres champs si nécessaire
 
 class AxesForm(forms.ModelForm):
     class Meta:

@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+# from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
@@ -14,25 +14,25 @@ from .forms import AxesForm, ProprietaireForm, CoordonneesForm, EquipementActifF
 
 from django.shortcuts import render, get_object_or_404
 
-def signin(request):
-    if request.method == 'POST':
-        username = request.POST.get('nom')
-        password = request.POST.get('password')
+# def signin(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('nom')
+#         password = request.POST.get('password')
 
-        # Query the Proprietaire model to find a matching username (nom) and password
-        proprietaire = Proprietaire.objects.filter(nom=username, password=password).first()
+#         # Query the Proprietaire model to find a matching username (nom) and password
+#         proprietaire = Proprietaire.objects.filter(nom=username, password=password).first()
 
-        if proprietaire:
-            # Login successful, perform any additional actions (e.g., set session variables, etc.)
-            return redirect('liste_axes')  # Redirect to the home page after successful login
-        else:
-            # Login failed, display an error message
-            error_message = "Invalid username or password. Please try again."
-            return render(request, 'signin.html', {'error_message': error_message})
+#         if proprietaire:
+#             # Login successful, perform any additional actions (e.g., set session variables, etc.)
+#             return redirect('liste_axes')  # Redirect to the home page after successful login
+#         else:
+#             # Login failed, display an error message
+#             error_message = "Invalid username or password. Please try again."
+#             return render(request, 'signin.html', {'error_message': error_message})
 
-    else:
-        # If it's a GET request, render the login page
-        return render(request, 'signin.html')
+#     else:
+#         # If it's a GET request, render the login page
+#         return render(request, 'signin.html')
     
     
 # def signin(request):
