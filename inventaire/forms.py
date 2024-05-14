@@ -5,7 +5,7 @@ from .models import Proprietaire, Coordonnees, EquipementActif, FibreOptique, Ax
 class ProprietaireForm(forms.ModelForm):
     class Meta:
         model = Proprietaire
-        fields = ['nom', 'password' , 'axes']  # Ajoutez d'autres champs si nécessaire
+        fields = ['nom', 'axes']  # Ajoutez d'autres champs si nécessaire
 
 class AxesForm(forms.ModelForm):
     class Meta:
